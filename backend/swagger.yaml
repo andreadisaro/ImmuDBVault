@@ -1,0 +1,148 @@
+definitions:
+    main.ErrorResponse:
+      properties:
+        code:
+          type: integer
+        error:
+          type: string
+        status:
+          type: string
+      type: object
+    main.GetAllFromVaultResponse:
+      properties:
+        page:
+          type: integer
+        perPage:
+          type: integer
+        revisions:
+          items:
+            properties:
+              document:
+                properties:
+                  _id:
+                    type: string
+                  _vault_md:
+                    properties:
+                      creator:
+                        type: string
+                      ts:
+                        type: integer
+                    type: object
+                  accountName:
+                    type: string
+                  accountNumber:
+                    type: string
+                  address:
+                    type: string
+                  amount:
+                    type: number
+                  iban:
+                    type: string
+                  timestamp:
+                    type: string
+                  type:
+                    type: string
+                type: object
+              revision:
+                type: string
+              transactionId:
+                type: string
+            type: object
+          type: array
+        searchId:
+          type: string
+      type: object
+    main.PutToVaultResponse:
+      properties:
+        documentId:
+          type: string
+        transactionId:
+          type: string
+      type: object
+    main.GetAllFromVaultRequest:
+      properties:
+        page:
+          type: integer
+        perPage:
+          type: integer
+    main.Account:
+      properties:
+        accountName:
+          type: string
+          description: Account number (unique)
+        accountNumber:
+          type: string
+          description: Account name
+        address:
+          type: string
+          description: Address
+        amount:
+          type: number
+          description: Amount
+        iban:
+          type: string
+          description: IBAN
+        type:
+          type: string
+          description: Type (sending, receiving)
+  info:
+    contact: {}
+    description: This is a sample Vault app
+    termsOfService: http://swagger.io/terms/
+    title: Immudb Vault API
+    version: "1.0"
+  paths:
+    /getAllFromVault:
+      post:
+        consumes:
+        - application/json
+        description: Queries immudb vault for all accounts (paginated)
+        parameters:
+        - description: Page number and items per page
+          name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/main.GetAllFromVaultRequest'
+        produces:
+        - application/json
+        responses:
+          "200":
+            description: OK
+            schema:
+              $ref: '#/definitions/main.GetAllFromVaultResponse'
+          "400":
+            description: Bad Request
+            schema:
+              $ref: '#/definitions/main.ErrorResponse'
+        summary: Get accounts info from vault
+        tags:
+        - vault
+    /putToVault:
+      put:
+        consumes:
+        - application/json
+        description: Puts account info to immudb vault
+        parameters:
+        - description: Account object
+          name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/main.Account'
+        produces:
+        - application/json
+        responses:
+          "200":
+            description: OK
+            schema:
+              $ref: '#/definitions/main.PutToVaultResponse'
+          "400":
+            description: Bad Request
+            schema:
+              $ref: '#/definitions/main.ErrorResponse'
+        summary: Put account info to vault
+        tags:
+        - vault
+  swagger: "2.0"
+  
